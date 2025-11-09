@@ -5,8 +5,8 @@ public class Obstacle : MonoBehaviour
     [SerializeField] private float _minSize = 1f;
     [SerializeField] private float _maxSize = 3f;
 
-    [SerializeField] private float _minSpeed = 500f;
-    [SerializeField] private float _maxSpeed = 2000f;
+    [SerializeField] private float _minSpeed = 10f;
+    [SerializeField] private float _maxSpeed = 200f;
 
     [SerializeField] private float _maxSpinSpeed = 30f;
 
