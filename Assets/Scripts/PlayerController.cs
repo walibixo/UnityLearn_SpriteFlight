@@ -3,8 +3,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float _thrustForce = 1f;
-    
+    [SerializeField] private float _thrustForce = 2f;
+    [SerializeField] private float _maxSpeed = 5f;
+
+    [SerializeField] private GameObject _boosterFlame;
+
     private Rigidbody2D _rigidbody2D;
 
     void Start()
@@ -23,6 +26,20 @@ public class PlayerController : MonoBehaviour
             // Move player in direction of mouse
             transform.up = direction;
             _rigidbody2D.AddForce(direction * _thrustForce);
+
+            if (_rigidbody2D.linearVelocity.magnitude > _maxSpeed)
+            {
+                _rigidbody2D.linearVelocity = _rigidbody2D.linearVelocity.normalized * _maxSpeed;
+            }
+        }
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            _boosterFlame.SetActive(true);
+        }
+        else if (Mouse.current.leftButton.wasReleasedThisFrame)
+        {
+            _boosterFlame.SetActive(false);
         }
     }
 

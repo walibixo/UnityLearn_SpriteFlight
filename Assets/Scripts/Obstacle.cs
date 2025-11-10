@@ -5,8 +5,8 @@ public class Obstacle : MonoBehaviour
     [SerializeField] private float _minSize = 1f;
     [SerializeField] private float _maxSize = 3f;
 
-    [SerializeField] private float _minSpeed = 10f;
-    [SerializeField] private float _maxSpeed = 200f;
+    [SerializeField] private float _minSpeed = 200f;
+    [SerializeField] private float _maxSpeed = 500f;
 
     [SerializeField] private float _maxSpinSpeed = 30f;
 
@@ -22,13 +22,12 @@ public class Obstacle : MonoBehaviour
         var torque = Random.Range(-_maxSpinSpeed, _maxSpinSpeed);
         _rigidbody2D.AddTorque(torque);
 
-        var impulse = Random.Range(_minSpeed, _maxSpeed) / size;
+        var impulse = Random.Range(_minSpeed, _maxSpeed);
         var direction = Random.insideUnitCircle.normalized;
         _rigidbody2D.AddForce(direction * impulse);
     }
 
     void Update()
     {
-
     }
 }
