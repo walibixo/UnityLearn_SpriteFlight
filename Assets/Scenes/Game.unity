@@ -335,6 +335,7 @@ MonoBehaviour:
   _thrustForce: 2
   _maxSpeed: 5
   _boosterFlame: {fileID: 1424030604}
+  _explosionEffect: {fileID: 5362374025081563292, guid: b8c855cf7ae13f841a254694956c4dc8, type: 3}
 --- !u!58 &517033887
 CircleCollider2D:
   m_ObjectHideFlags: 0

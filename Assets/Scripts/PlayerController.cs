@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _maxSpeed = 5f;
 
     [SerializeField] private GameObject _boosterFlame;
+    [SerializeField] private GameObject _explosionEffect;
 
     private Rigidbody2D _rigidbody2D;
 
@@ -45,6 +46,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        Instantiate(_explosionEffect, transform.position, transform.rotation);
         //Destroy(gameObject);
     }
 }
