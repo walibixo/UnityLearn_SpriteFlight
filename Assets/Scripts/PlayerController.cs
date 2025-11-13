@@ -48,5 +48,6 @@ public class PlayerController : MonoBehaviour
     {
         Instantiate(_explosionEffect, transform.position, transform.rotation);
         //Destroy(gameObject);
+        GameManager.Instance.GameOver();
     }
 }
