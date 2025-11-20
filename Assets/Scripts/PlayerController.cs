@@ -46,8 +46,19 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if(GetSize(this.gameObject) > GetSize(collision.gameObject))
+        {
+            return;
+        }
+
         Instantiate(_explosionEffect, transform.position, transform.rotation);
-        //Destroy(gameObject);
         GameManager.Instance.GameOver();
+
+        Destroy(gameObject);
+    }
+
+    private float GetSize(GameObject gameObject)
+    {
+        return gameObject.transform.localScale.x;
     }
 }

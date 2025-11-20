@@ -20,9 +20,4 @@ public class Spawner : MonoBehaviour
             Instantiate(_obstaclePrefab, spawnPosition, Quaternion.identity, transform);
         }
     }
-
-    void Update()
-    {
-
-    }
 }

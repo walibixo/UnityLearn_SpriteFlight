@@ -10,6 +10,8 @@ public class Obstacle : MonoBehaviour
 
     [SerializeField] private float _maxSpinSpeed = 30f;
 
+    [SerializeField] private GameObject _bounceEffectPrefab;
+
     private Rigidbody2D _rigidbody2D;
 
     void Start()
@@ -27,7 +29,25 @@ public class Obstacle : MonoBehaviour
         _rigidbody2D.AddForce(direction * impulse);
     }
 
-    void Update()
+    void OnCollisionEnter2D(Collision2D collision)
     {
+        if (GetSpeed(gameObject) < GetSpeed(collision.gameObject))
+        {
+            return;
+        }
+
+        Vector2 contactPoint = collision.GetContact(0).point;
+        GameObject bounceEffect = Instantiate(_bounceEffectPrefab, contactPoint, Quaternion.identity);
+        bounceEffect.transform.localScale = Vector3.one * (GetSpeed(gameObject) / 2f);
+
+        // Destroy the effect after 1 second
+        Destroy(bounceEffect, 1f);
+    }
+
+    private float GetSpeed(GameObject gameObject)
+    {
+        if (gameObject == null) return 0f;
+        if (!gameObject.TryGetComponent<Rigidbody2D>(out var rb)) return 0f;
+        return rb.linearVelocity.magnitude;
     }
 }

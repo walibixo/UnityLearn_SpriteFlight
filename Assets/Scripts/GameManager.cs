@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private UIDocument _uiDocument;
     private Label _scoreText;
+    private Label _highScoreText;
     private Button _restartButton;
 
     private float _elapsedTime = 0f;
@@ -27,6 +28,9 @@ public class GameManager : MonoBehaviour
     {
         _scoreText = _uiDocument.rootVisualElement.Q<Label>("ScoreLabel");
 
+        _highScoreText = _uiDocument.rootVisualElement.Q<Label>("HighScoreLabel");
+        _highScoreText.style.display = DisplayStyle.None;
+
         _restartButton = _uiDocument.rootVisualElement.Q<Button>("RestartButton");
         _restartButton.clicked += ReloadScene;
         _restartButton.style.display = DisplayStyle.None;
@@ -42,8 +46,21 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        Debug.Log("Game Over! Final Score: " + _score);
+        ShowHighScore();
+
         _restartButton.style.display = DisplayStyle.Flex;
+    }
+
+    private void ShowHighScore()
+    {
+        if (_score > PlayerPrefs.GetFloat("HighScore", 0))
+        {
+            PlayerPrefs.SetFloat("HighScore", _score);
+            PlayerPrefs.Save();
+        }
+
+        _highScoreText.text = "HIGH SCORE: " + PlayerPrefs.GetFloat("HighScore", 0);
+        _highScoreText.style.display = DisplayStyle.Flex;
     }
 
     void ReloadScene()
