@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    [SerializeField] private float _minSize = 1f;
-    [SerializeField] private float _maxSize = 3f;
+    private float _minSize = 0.1f;
+    private float _maxSize = 3f;
 
-    [SerializeField] private float _minSpeed = 200f;
-    [SerializeField] private float _maxSpeed = 500f;
+    private float _minSpeed = 50f;
+    private float _maxSpeed = 100f;
 
-    [SerializeField] private float _maxSpinSpeed = 30f;
+    private float _maxSpinSpeed = 30f;
 
     [SerializeField] private GameObject _bounceEffectPrefab;
 
@@ -18,7 +18,7 @@ public class Obstacle : MonoBehaviour
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
 
-        var size = Random.Range(_minSize, _maxSize);
+        float size = Mathf.Round(Random.Range(_minSize, _maxSize) * 2f) / 2f;
         transform.localScale = new Vector3(size, size, 1);
 
         var torque = Random.Range(-_maxSpinSpeed, _maxSpinSpeed);
@@ -42,6 +42,11 @@ public class Obstacle : MonoBehaviour
 
         // Destroy the effect after 1 second
         Destroy(bounceEffect, 1f);
+    }
+
+    public void Destroy()
+    {
+        Destroy(gameObject);
     }
 
     private float GetSpeed(GameObject gameObject)

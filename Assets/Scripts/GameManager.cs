@@ -4,9 +4,10 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private float _scoreMultiplier = 10f;
+    private float _scoreMultiplier = 10f;
 
     [SerializeField] private UIDocument _uiDocument;
+
     private Label _scoreText;
     private Label _highScoreText;
     private Button _restartButton;

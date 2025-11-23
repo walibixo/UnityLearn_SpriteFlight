@@ -3,17 +3,19 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float _thrustForce = 2f;
-    [SerializeField] private float _maxSpeed = 5f;
+    private float _thrustForce = 4f;
+    private float _maxSpeed = 6f;
 
     [SerializeField] private GameObject _boosterFlame;
     [SerializeField] private GameObject _explosionEffect;
 
     private Rigidbody2D _rigidbody2D;
+    private TrailRenderer _trailRenderer;
 
     void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _trailRenderer = GetComponent<TrailRenderer>();
     }
 
     void Update()
@@ -46,8 +48,25 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if(GetSize(this.gameObject) > GetSize(collision.gameObject))
+        if (!collision.gameObject.TryGetComponent<Obstacle>(out var obstacle))
         {
+            return;
+        }
+
+        var obstacleSize = GetSize(collision.gameObject);
+        var playerSize = GetSize(this.gameObject);
+
+        if (playerSize == obstacleSize)
+        {
+            return;
+        }
+
+        if (playerSize > obstacleSize)
+        {
+            obstacle.Destroy();
+            gameObject.transform.localScale += Vector3.one * (0.5f);
+            _trailRenderer.widthMultiplier += 0.5f;
+
             return;
         }
 
