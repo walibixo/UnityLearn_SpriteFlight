@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -64,8 +65,7 @@ public class PlayerController : MonoBehaviour
         if (playerSize > obstacleSize)
         {
             obstacle.Destroy();
-            gameObject.transform.localScale += Vector3.one * (0.5f);
-            _trailRenderer.widthMultiplier += 0.5f;
+            Grow();
 
             return;
         }
@@ -79,5 +79,23 @@ public class PlayerController : MonoBehaviour
     private float GetSize(GameObject gameObject)
     {
         return gameObject.transform.localScale.x;
+    }
+
+    private void Grow()
+    {
+        gameObject.transform.localScale += Vector3.one * (0.5f);
+        if (_trailRenderer != null)
+        {
+            _trailRenderer.widthMultiplier += 0.5f;
+        }
+
+        StartCoroutine(SlowDownEffect(1f));
+    }
+
+    private IEnumerator SlowDownEffect(float durationInSeconds)
+    {
+        Time.timeScale = 0.5f;
+        yield return new WaitForSecondsRealtime(durationInSeconds);
+        Time.timeScale = 1f;
     }
 }
