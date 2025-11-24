@@ -1,9 +1,12 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private Spawner _spawner;
+
     private float _scoreMultiplier = 10f;
 
     [SerializeField] private UIDocument _uiDocument;
@@ -35,6 +38,8 @@ public class GameManager : MonoBehaviour
         _restartButton = _uiDocument.rootVisualElement.Q<Button>("RestartButton");
         _restartButton.clicked += ReloadScene;
         _restartButton.style.display = DisplayStyle.None;
+
+        _spawner.SpawnObstacles();
     }
 
     void Update()
@@ -68,4 +73,17 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public void SlowDown(float durationInSeconds)
+    {
+        StartCoroutine(SlowDownEffect(durationInSeconds));
+    }
+
+    private IEnumerator SlowDownEffect(float durationInSeconds)
+    {
+        Time.timeScale = 0.5f;
+        yield return new WaitForSecondsRealtime(durationInSeconds);
+        Time.timeScale = 1f;
+    }
+
 }

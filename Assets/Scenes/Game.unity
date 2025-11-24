@@ -332,8 +332,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bed1474c7d0ab1448a58a1dde09f9476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  _thrustForce: 2
-  _maxSpeed: 5
   _boosterFlame: {fileID: 1424030604}
   _explosionEffect: {fileID: 5362374025081563292, guid: b8c855cf7ae13f841a254694956c4dc8, type: 3}
 --- !u!58 &517033887
@@ -1121,7 +1119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d11c3944438de0408e5346758b2e808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  _scoreMultiplier: 10
+  _spawner: {fileID: 1252993952}
   _uiDocument: {fileID: 975989341}
 --- !u!4 &1515861428
 Transform:

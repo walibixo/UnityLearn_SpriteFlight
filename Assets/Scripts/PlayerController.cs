@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private float _thrustForce = 4f;
+    private float _thrustForce = 3f;
     private float _maxSpeed = 6f;
 
     [SerializeField] private GameObject _boosterFlame;
@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 
             // Move player in direction of mouse
             transform.up = direction;
+
             _rigidbody2D.AddForce(direction * _thrustForce);
 
             if (_rigidbody2D.linearVelocity.magnitude > _maxSpeed)
@@ -89,13 +90,6 @@ public class PlayerController : MonoBehaviour
             _trailRenderer.widthMultiplier += 0.5f;
         }
 
-        StartCoroutine(SlowDownEffect(1f));
-    }
-
-    private IEnumerator SlowDownEffect(float durationInSeconds)
-    {
-        Time.timeScale = 0.5f;
-        yield return new WaitForSecondsRealtime(durationInSeconds);
-        Time.timeScale = 1f;
+        GameManager.Instance.SlowDown(1f);
     }
 }

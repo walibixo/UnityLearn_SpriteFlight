@@ -24,7 +24,7 @@ public class Obstacle : MonoBehaviour
         var torque = Random.Range(-_maxSpinSpeed, _maxSpinSpeed);
         _rigidbody2D.AddTorque(torque);
 
-        var impulse = Random.Range(_minSpeed, _maxSpeed);
+        var impulse = Random.Range(_minSpeed, _maxSpeed) * (1 / size) ;
         var direction = Random.insideUnitCircle.normalized;
         _rigidbody2D.AddForce(direction * impulse);
     }
