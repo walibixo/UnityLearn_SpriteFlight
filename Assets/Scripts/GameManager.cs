@@ -6,14 +6,16 @@ using UnityEngine.UIElements;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Spawner _spawner;
+    [SerializeField] private PlayerController _playerController;
 
-    private float _scoreMultiplier = 10f;
+    private readonly float _scoreMultiplier = 10f;
 
     [SerializeField] private UIDocument _uiDocument;
 
     private Label _scoreText;
     private Label _highScoreText;
     private Button _restartButton;
+    private ProgressBar _levelProgressBar;
 
     private float _elapsedTime = 0f;
     private float _score = 0f;
@@ -39,6 +41,8 @@ public class GameManager : MonoBehaviour
         _restartButton.clicked += ReloadScene;
         _restartButton.style.display = DisplayStyle.None;
 
+        _levelProgressBar = _uiDocument.rootVisualElement.Q<ProgressBar>("LevelProgressBar");
+
         _spawner.SpawnObstacles();
     }
 
@@ -48,6 +52,9 @@ public class GameManager : MonoBehaviour
         _score = Mathf.FloorToInt(_elapsedTime * _scoreMultiplier);
 
         _scoreText.text = "SCORE: " + _score;
+
+        _levelProgressBar.value = ((_playerController.Level -1) * 100) % 100;
+        _levelProgressBar.title = "LEVEL " + Mathf.FloorToInt(_playerController.Level);
     }
 
     public void GameOver()

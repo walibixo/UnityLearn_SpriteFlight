@@ -66,16 +66,17 @@ public class PlayerController : MonoBehaviour
     private void OnObstacleCollision(Obstacle obstacle)
     {
         var obstacleLevel = obstacle.Level;
+        var playerLevel = Mathf.FloorToInt(Level);
 
-        if (Level == obstacleLevel)
+        if (playerLevel == obstacleLevel)
         {
             return;
         }
-        else if (Level > obstacleLevel)
+        else if (playerLevel > obstacleLevel)
         {
             obstacle.Destroy();
 
-            var growth = _growthFactor / (Level - obstacleLevel);
+            var growth = _growthFactor / (playerLevel - obstacleLevel);
 
             Grow(growth);
 

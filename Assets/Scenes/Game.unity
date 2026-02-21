@@ -1120,6 +1120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   _spawner: {fileID: 1252993952}
+  _playerController: {fileID: 517033886}
   _uiDocument: {fileID: 975989341}
 --- !u!4 &1515861428
 Transform:
