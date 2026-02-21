@@ -1,11 +1,14 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(TrailRenderer))]
 public class PlayerController : MonoBehaviour
 {
-    private float _thrustForce = 3f;
-    private float _maxSpeed = 6f;
+    private readonly float _thrustForce = 3f;
+    private readonly float _maxSpeed = 6f;
+
+    private readonly float _growthFactor = 0.5f;
 
     [SerializeField] private GameObject _boosterFlame;
     [SerializeField] private GameObject _explosionEffect;
@@ -13,8 +16,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rigidbody2D;
     private TrailRenderer _trailRenderer;
 
+    public float Level { get; private set; }
+
     void Start()
     {
+        Level = 1f;
+
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _trailRenderer = GetComponent<TrailRenderer>();
     }
@@ -50,44 +57,47 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!collision.gameObject.TryGetComponent<Obstacle>(out var obstacle))
+        if (collision.gameObject.TryGetComponent<Obstacle>(out var obstacle))
+        {
+            OnObstacleCollision(obstacle);
+        }
+    }
+
+    private void OnObstacleCollision(Obstacle obstacle)
+    {
+        var obstacleLevel = obstacle.Level;
+
+        if (Level == obstacleLevel)
         {
             return;
         }
-
-        var obstacleSize = GetSize(collision.gameObject);
-        var playerSize = GetSize(this.gameObject);
-
-        if (playerSize == obstacleSize)
-        {
-            return;
-        }
-
-        if (playerSize > obstacleSize)
+        else if (Level > obstacleLevel)
         {
             obstacle.Destroy();
-            Grow();
+
+            var growth = _growthFactor / (Level - obstacleLevel);
+
+            Grow(growth);
 
             return;
         }
+        else
+        {
+            Instantiate(_explosionEffect, transform.position, transform.rotation);
+            GameManager.Instance.GameOver();
 
-        Instantiate(_explosionEffect, transform.position, transform.rotation);
-        GameManager.Instance.GameOver();
-
-        Destroy(gameObject);
+            Destroy(gameObject);
+        }
     }
 
-    private float GetSize(GameObject gameObject)
+    private void Grow(float growth)
     {
-        return gameObject.transform.localScale.x;
-    }
+        Level += growth;
 
-    private void Grow()
-    {
-        gameObject.transform.localScale += Vector3.one * (0.5f);
+        gameObject.transform.localScale += Vector3.one * (growth);
         if (_trailRenderer != null)
         {
-            _trailRenderer.widthMultiplier += 0.5f;
+            _trailRenderer.widthMultiplier += growth;
         }
 
         GameManager.Instance.SlowDown(1f);

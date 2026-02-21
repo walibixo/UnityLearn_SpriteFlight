@@ -1,30 +1,35 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Obstacle : MonoBehaviour
 {
-    private float _minSize = 0.1f;
-    private float _maxSize = 3f;
+    private readonly float _minSpeed = 50f;
+    private readonly float _maxSpeed = 100f;
 
-    private float _minSpeed = 50f;
-    private float _maxSpeed = 100f;
-
-    private float _maxSpinSpeed = 30f;
+    private readonly float _maxSpinSpeed = 30f;
 
     [SerializeField] private GameObject _bounceEffectPrefab;
 
     private Rigidbody2D _rigidbody2D;
 
-    void Start()
+    public int Level { get; private set; }
+
+    void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
+    }
 
-        float size = Mathf.Round(Random.Range(_minSize, _maxSize) * 2f) / 2f;
+    public void Initialize(int level)
+    {
+        Level = level;
+
+        var size = level + 0.5f;
         transform.localScale = new Vector3(size, size, 1);
 
         var torque = Random.Range(-_maxSpinSpeed, _maxSpinSpeed);
         _rigidbody2D.AddTorque(torque);
 
-        var impulse = Random.Range(_minSpeed, _maxSpeed) * (1 / size) ;
+        var impulse = Random.Range(_minSpeed, _maxSpeed) * (1f / size);
         var direction = Random.insideUnitCircle.normalized;
         _rigidbody2D.AddForce(direction * impulse);
     }

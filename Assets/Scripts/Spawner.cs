@@ -18,7 +18,14 @@ public class Spawner : MonoBehaviour
 
     public void SpawnObstacles()
     {
-        for (int i = 0; i < 10; i++)
+        SpawnObstaclesWithSize(4, 0);
+        SpawnObstaclesWithSize(3, 1);
+        SpawnObstaclesWithSize(3, 2);
+    }
+
+    private void SpawnObstaclesWithSize(int count, int level)
+    {
+        for (int i = 0; i < count; i++)
         {
             var spawnPosition = new Vector3(
                 Random.Range(_screenBottomLeft.x, _screenTopRight.x),
@@ -26,6 +33,7 @@ public class Spawner : MonoBehaviour
                 0);
 
             var obstacle = Instantiate(_obstaclePrefab, spawnPosition, Quaternion.identity, transform);
+            obstacle.Initialize(level);
             _activeObstacles.Add(obstacle);
         }
     }
@@ -45,7 +53,7 @@ public class Spawner : MonoBehaviour
     public void RespawnObstacles()
     {
         ClearObstacles();
-        Start();
+        SpawnObstacles();
     }
 
     public void RemoveObstacle(Obstacle obstacle)
