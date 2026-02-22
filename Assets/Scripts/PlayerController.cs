@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,7 +18,7 @@ public class PlayerController : MonoBehaviour
 
     public float Level { get; private set; }
 
-    public event Action<int> OnPlayerLevelChanged;
+    public event System.Action<int> OnPlayerLevelChanged;
 
     void Start()
     {

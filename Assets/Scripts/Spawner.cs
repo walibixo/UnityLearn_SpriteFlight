@@ -1,13 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private Obstacle _obstaclePrefab;
     private Vector2 _screenBottomLeft;
     private Vector2 _screenTopRight;
 
+    [SerializeField] private Obstacle _obstaclePrefab;
+
     private readonly List<Obstacle> _activeObstacles = new();
+
+    private PlayerController _playerController;
+
+    void Awake()
+    {
+        _playerController = FindFirstObjectByType<PlayerController>();        
+    }
 
     void Start()
     {
@@ -16,11 +25,20 @@ public class Spawner : MonoBehaviour
         _screenTopRight = camera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
     }
 
+    void Update()
+    {
+        if (_activeObstacles.Count > 0) return;
+
+        SpawnObstacles();
+    }
+
     public void SpawnObstacles()
     {
-        SpawnObstaclesWithSize(4, 0);
-        SpawnObstaclesWithSize(3, 1);
-        SpawnObstaclesWithSize(3, 2);
+        var playerLevel = Mathf.FloorToInt(_playerController.Level);
+
+        SpawnObstaclesWithSize(4, playerLevel - 1);
+        SpawnObstaclesWithSize(3, playerLevel);
+        SpawnObstaclesWithSize(3, playerLevel + 1);
     }
 
     private void SpawnObstaclesWithSize(int count, int level)
@@ -34,6 +52,7 @@ public class Spawner : MonoBehaviour
 
             var obstacle = Instantiate(_obstaclePrefab, spawnPosition, Quaternion.identity, transform);
             obstacle.Initialize(level);
+            obstacle.OnDestroyed += RemoveObstacle;
             _activeObstacles.Add(obstacle);
         }
     }
@@ -56,11 +75,9 @@ public class Spawner : MonoBehaviour
         SpawnObstacles();
     }
 
-    public void RemoveObstacle(Obstacle obstacle)
+    private void RemoveObstacle(Obstacle obstacle)
     {
-        if (_activeObstacles.Contains(obstacle))
-        {
-            _activeObstacles.Remove(obstacle);
-        }
+        obstacle.OnDestroyed -= RemoveObstacle;
+        _activeObstacles.Remove(obstacle);
     }
 }

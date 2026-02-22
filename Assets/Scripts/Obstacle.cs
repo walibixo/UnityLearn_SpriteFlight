@@ -17,6 +17,8 @@ public class Obstacle : MonoBehaviour
 
     public int Level { get; private set; }
 
+    public event System.Action<Obstacle> OnDestroyed;
+
     void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -75,6 +77,7 @@ public class Obstacle : MonoBehaviour
 
     public void Destroy()
     {
+        OnDestroyed?.Invoke(this);
         Destroy(gameObject);
     }
 
