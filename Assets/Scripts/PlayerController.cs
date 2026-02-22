@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,6 +18,8 @@ public class PlayerController : MonoBehaviour
     private TrailRenderer _trailRenderer;
 
     public float Level { get; private set; }
+
+    public event Action<int> OnPlayerLevelChanged;
 
     void Start()
     {
@@ -93,13 +96,24 @@ public class PlayerController : MonoBehaviour
 
     private void Grow(float growth)
     {
-        Level += growth;
+        LevelUp(growth);
 
         gameObject.transform.localScale += Vector3.one * (growth);
         if (_trailRenderer != null)
         {
             _trailRenderer.widthMultiplier += growth;
         }
+    }
+
+    private void LevelUp(float growth)
+    {
+        int previousLevel = Mathf.FloorToInt(Level);
+        Level += growth;
+        int newLevel = Mathf.FloorToInt(Level);
+
+        if (newLevel <= previousLevel) return;
+
+        OnPlayerLevelChanged?.Invoke(newLevel);
 
         GameManager.Instance.SlowDown(1f);
     }

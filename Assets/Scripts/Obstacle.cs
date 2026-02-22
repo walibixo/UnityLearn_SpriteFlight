@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Obstacle : MonoBehaviour
 {
     private readonly float _minSpeed = 50f;
@@ -11,17 +12,40 @@ public class Obstacle : MonoBehaviour
     [SerializeField] private GameObject _bounceEffectPrefab;
 
     private Rigidbody2D _rigidbody2D;
+    private SpriteRenderer _spriteRenderer;
+    private PlayerController _playerController;
 
     public int Level { get; private set; }
 
     void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _playerController = FindFirstObjectByType<PlayerController>();
+    }
+
+    void OnEnable()
+    {
+        _playerController.OnPlayerLevelChanged += OnPlayerLevelChanged;
+    }
+
+    void OnDisable()
+    {
+        _playerController.OnPlayerLevelChanged -= OnPlayerLevelChanged;
+    }
+
+    private void OnPlayerLevelChanged(int newPlayerLevel)
+    {
+        if (newPlayerLevel > Level)
+        {
+            _spriteRenderer.color = Color.red;
+        }
     }
 
     public void Initialize(int level)
     {
         Level = level;
+        OnPlayerLevelChanged(Mathf.FloorToInt(_playerController.Level));
 
         var size = level + 0.5f;
         transform.localScale = new Vector3(size, size, 1);
