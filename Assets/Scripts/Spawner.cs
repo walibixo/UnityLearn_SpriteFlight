@@ -4,25 +4,27 @@ using UnityEngine.Rendering;
 
 public class Spawner : MonoBehaviour
 {
-    private Vector2 _screenBottomLeft;
-    private Vector2 _screenTopRight;
-
     [SerializeField] private Obstacle _obstaclePrefab;
 
     private readonly List<Obstacle> _activeObstacles = new();
 
     private PlayerController _playerController;
+    private Camera _camera;
 
     void Awake()
     {
-        _playerController = FindFirstObjectByType<PlayerController>();        
+        _playerController = FindFirstObjectByType<PlayerController>();
+        _camera = Camera.main;
     }
 
-    void Start()
+    private Vector2 GetScreenBottomLeft()
     {
-        var camera = Camera.main;
-        _screenBottomLeft = camera.ScreenToWorldPoint(new Vector2(0, 0));
-        _screenTopRight = camera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        return _camera.ScreenToWorldPoint(new Vector2(0, 0));
+    }
+
+    private Vector2 GetScreenTopRight()
+    {
+        return _camera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
     }
 
     void Update()
@@ -43,11 +45,14 @@ public class Spawner : MonoBehaviour
 
     private void SpawnObstaclesWithSize(int count, int level)
     {
+        Vector2 screenBottomLeft = GetScreenBottomLeft();
+        Vector2 screenTopRight = GetScreenTopRight();
+
         for (int i = 0; i < count; i++)
         {
             var spawnPosition = new Vector3(
-                Random.Range(_screenBottomLeft.x, _screenTopRight.x),
-                Random.Range(_screenBottomLeft.y, _screenTopRight.y),
+                Random.Range(screenBottomLeft.x, screenTopRight.x),
+                Random.Range(screenBottomLeft.y, screenTopRight.y),
                 0);
 
             var obstacle = Instantiate(_obstaclePrefab, spawnPosition, Quaternion.identity, transform);
