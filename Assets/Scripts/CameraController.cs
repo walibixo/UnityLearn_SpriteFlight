@@ -4,8 +4,8 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private float _initialOrthographicSize;
-    private float _zoomMultiplier = 2f;
-    private float _zoomSpeed = 2f;
+    private float _zoomMultiplier = 6f;
+    private float _zoomSpeed = 1f;
 
     private Camera _camera;
     private PlayerController _playerController;

@@ -39,12 +39,9 @@ public class PlayerController : MonoBehaviour
             // Move player in direction of mouse
             transform.up = direction;
 
-            _rigidbody2D.AddForce(direction * _thrustForce);
+            _rigidbody2D.AddForce(direction * ScaleToCurrentLevel(_thrustForce));
 
-            if (_rigidbody2D.linearVelocity.magnitude > _maxSpeed)
-            {
-                _rigidbody2D.linearVelocity = _rigidbody2D.linearVelocity.normalized * _maxSpeed;
-            }
+            _rigidbody2D.linearVelocity = Vector3.ClampMagnitude(_rigidbody2D.linearVelocity, ScaleToCurrentLevel(_maxSpeed));
         }
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -115,5 +112,11 @@ public class PlayerController : MonoBehaviour
         OnPlayerLevelChanged?.Invoke(newLevel);
 
         GameManager.Instance.SlowDown(1f);
+    }
+
+    private float ScaleToCurrentLevel(float baseValue)
+    {
+        int level = Mathf.FloorToInt(Level);
+        return baseValue * level;
     }
 }
